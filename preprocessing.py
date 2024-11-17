@@ -42,7 +42,6 @@ normal_data['Protocol'] = normal_data['Protocol'].replace(0, 'Unidentified')
 label_encoder = LabelEncoder() #initialize the encoder
 
 #encode the target column
-normal_data['Protocol'] = label_encoder.fit_transform(normal_data['Protocol'])
 
 #For malicious data
 #There are some IPv6 addresses too, they need to be converted to IPv4
@@ -55,8 +54,19 @@ def convert_ip_to_int(ip):
         except ipaddress.AddressValueError:
             return None
 
+normal_data['Source'] = normal_data['Source'].apply(convert_ip_to_int)
+normal_data['Destination'] = normal_data['Destination'].apply(convert_ip_to_int)
+normal_data['Protocol'] = normal_data['Protocol'].apply(convert_ip_to_int)
+
 malicious_data['Source'] = malicious_data['Source'].apply(convert_ip_to_int)
+malicious_data['Destination'] = malicious_data['Destination'].apply(convert_ip_to_int)
 malicious_data['Protocol'] = malicious_data['Protocol'].apply(convert_ip_to_int)
+
+#Encoding the 'info' column
+#encoder = LabelEncoder()
+#normal_data['Info'] = encoder.fit_transform(normal_data['Info'])
+#malicious_data['Info'] = encoder.fit_transform(malicious_data['Info'])
+
 
 #add a label column with value 0 and 1
 normal_data['label'] = 0
