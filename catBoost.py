@@ -2,11 +2,12 @@ import pandas as pd
 import lightgbm as lgb
 import ipaddress
 import hashlib
+import joblib
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-#Load the dataset
+#Load the dataset 
 normal_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Normal_Data.csv', index_col=0)
 malicious_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Malicious_Data.csv', index_col=0)
 
@@ -68,14 +69,10 @@ y_pred_binary = (y_pred > 0.5).astype(int)
 
 print(f'Accuracy: {accuracy_score(y_test, y_pred_binary)}')
 
-#print(gbm.feature_importance())
-#print(X_train.columns)
-
-#print(malicious_data.dtypes)
-#print(malicious_data.iloc[:, 2].unique())
-
 def hash_ip(ip):
     ip = str(ip)
     return int(hashlib.md5(ip.encode()).hexdigest(), 16) % (10 ** 8)
 
 malicious_data['Source'] = malicious_data['Source'].apply(hash_ip)
+
+joblib.dump(gbm, 'catBoost_model.pkl')

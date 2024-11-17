@@ -1,5 +1,6 @@
 import pandas as pd
 import ipaddress
+import joblib 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
@@ -52,9 +53,11 @@ grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid, cv=3, n_jo
 
 grid_search.fit(X_train, y_train)
 
-print("Best parameters:", grid_search.best_params_)
+best_Parameters = grid_search.best_params_
 
 #evaluation
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
+#print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred))
 print("\nAccuracy:", accuracy_score(y_test, y_pred))
+
+joblib.dump(best_Parameters, 'Random_Forest_Model.pkl')
