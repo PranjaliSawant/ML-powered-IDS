@@ -1,10 +1,11 @@
-from scapy.all import sniff, IP, TCP, UDP
+from scapy.all import sniff, IP, TCP, UDP #Provides packet capture and packet-level protocols
 import logging
 
 # Configure logging
-logging.basicConfig(filename='signature_ids.log', level=logging.INFO)
+logging.basicConfig(filename='signature_ids.log', level=logging.INFO) #to store detected intrusions
 
 #DEFINING SIGNATURES 
+#signatures are predefined pattern of malicious or suspicious network traffic
 signatures = [
     {"src_ip": "192.168.1.100", "dst_ip": "192.168.1.101", "src_port": 12345, "dst_port": 80, "protocol": "TCP", "content": "malicious"},
     {"src_ip": "0.0.0.0", "dst_ip": "255.255.255.255", "src_port": 68, "dst_port": 67, "protocol": "UDP", "content": "DHCP Discover"},
@@ -13,7 +14,7 @@ signatures = [
 
 def extract_features(packet):
     features = {}
-    if IP in packet:
+    if IP in packet: #To Convert raw packet data into structured features to match against the signatures
         features['src_ip'] = packet[IP].src
         features['dst_ip'] = packet[IP].dst
     if TCP in packet:

@@ -4,8 +4,8 @@ import ipaddress
 # from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 
 #Load the dataset
-normal_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Normal_Data.csv', index_col=0)
-malicious_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Malicious_Data.csv', index_col=0)
+normal_data = pd.read_csv(r'preprocessed_Normal_Data.csv', index_col=0)
+malicious_data = pd.read_csv(r'preprocessed_Malicious_Data.csv', index_col=0)
 
 data = pd.concat([normal_data, malicious_data], axis=0)
 
