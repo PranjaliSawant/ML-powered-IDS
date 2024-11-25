@@ -6,6 +6,7 @@ import ipaddress
 normal_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\network-traffic-dataset\\Normal_data.csv', low_memory = False)
 malicious_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\network-traffic-dataset\\Malicious_data.csv', low_memory = False)                          
 
+#Normalizing data to numeric value 
 normal_data['No.'] = pd.to_numeric(normal_data['No.'], errors='coerce')
 normal_data['Time'] = pd.to_numeric(normal_data['Time'], errors='coerce')
 normal_data['Source'] = pd.to_numeric(normal_data['Source'], errors='coerce')
@@ -25,7 +26,6 @@ malicious_data.drop_duplicates(inplace=True)
 
 #Normalization
 #We need to normalize the numerical coulmns separately, as they can be directly normalized
-
 numerical_columns_01 = ['No.','Time','Source','Length']
 numerical_columns_02 = ['No.','Time','Length']
 
@@ -39,9 +39,7 @@ malicious_data[numerical_columns_02] = scaler.fit_transform(malicious_data[numer
 normal_data['Protocol'] = normal_data['Protocol'].replace(0, 'Unidentified')
 #malicious_data['Protocol'] = malicious_data['Protocol'].replace(0, 'Unidentified')
 
-label_encoder = LabelEncoder() #initialize the encoder
-
-#encode the target column
+#label_encoder = LabelEncoder() can be used only for categorical data enteries
 
 #For malicious data
 #There are some IPv6 addresses too, they need to be converted to IPv4
@@ -61,12 +59,6 @@ normal_data['Protocol'] = normal_data['Protocol'].apply(convert_ip_to_int)
 malicious_data['Source'] = malicious_data['Source'].apply(convert_ip_to_int)
 malicious_data['Destination'] = malicious_data['Destination'].apply(convert_ip_to_int)
 malicious_data['Protocol'] = malicious_data['Protocol'].apply(convert_ip_to_int)
-
-#Encoding the 'info' column
-#encoder = LabelEncoder()
-#normal_data['Info'] = encoder.fit_transform(normal_data['Info'])
-#malicious_data['Info'] = encoder.fit_transform(malicious_data['Info'])
-
 
 #add a label column with value 0 and 1
 normal_data['label'] = 0

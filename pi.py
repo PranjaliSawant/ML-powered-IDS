@@ -1,23 +1,12 @@
 import pandas as pd
 import joblib
 import ipaddress
-# from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 
 #Load the dataset
-normal_data = pd.read_csv(r'preprocessed_Normal_Data.csv', index_col=0)
-malicious_data = pd.read_csv(r'preprocessed_Malicious_Data.csv', index_col=0)
+normal_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Normal_Data.csv', index_col=0)
+malicious_data = pd.read_csv(r'D:\\IDS\\ML-powered-IDS-1\\preprocessed_Malicious_Data.csv', index_col=0)
 
 data = pd.concat([normal_data, malicious_data], axis=0)
-
-# numerical_columns_01 = ['Time','Source','Length']
-# numerical_columns_02 = ['No.','Time','Length']
-
-# scaler = MinMaxScaler() #to initialize the MinMaxScaler
-
-# #normal_data[numerical_columns_01] = scaler.fit_transform(normal_data[numerical_columns_01])
-# #malicious_data[numerical_columns_02] = scaler.fit_transform(malicious_data[numerical_columns_02])
-# scaler.fit(normal_data[numerical_columns_01])
-
 
 #shuffle the dataset
 data = data.sample(frac=1, random_state=42).reset_index(drop=True)
@@ -29,11 +18,8 @@ y = data["label"]
 def ip_to_int(ip):
     try:
         return int(ipaddress.IPv4Address(ip))
-    except ipaddress.AddressValueError:
-        try:
-            return int(ipaddress.IPv6Address(ip))
-        except ipaddress.AddressValueError:
-            return None
+    except ValueError:
+        return None #to handle missing or invalid IPs
 
 X['Source'] = X['Source'].apply(ip_to_int)
 X['Destination'] = X['Destination'].apply(ip_to_int)
@@ -55,4 +41,3 @@ result1 = model_catboost.predict(X_test)
 
 print(result1)
 # print(result2)
-# print(scaler.inverse_transform([result1]))

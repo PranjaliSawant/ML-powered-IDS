@@ -14,14 +14,14 @@ signatures = [
 
 def extract_features(packet):
     features = {}
-    if IP in packet: #To Convert raw packet data into structured features to match against the signatures
+    if IP in packet: #Extracts information (features) from a network packet
         features['src_ip'] = packet[IP].src
         features['dst_ip'] = packet[IP].dst
     if TCP in packet:
         features['src_port'] = packet[TCP].sport
         features['dst_port'] = packet[TCP].dport
         features['protocol'] = "TCP"
-        features['content'] = bytes(packet[TCP].payload).decode(errors='ignore')
+        features['content'] = bytes(packet[TCP].payload).decode(errors='ignore')  #packet payload is the content
     elif UDP in packet:
         features['src_port'] = packet[UDP].sport
         features['dst_port'] = packet[UDP].dport
@@ -29,17 +29,17 @@ def extract_features(packet):
         features['content'] = bytes(packet[UDP].payload).decode(errors='ignore')
     return features
 
-def match_signature(packet_features, signature):
+def match_signature(packet_features, signature): #Match features of packet and signature
     for key in signature:
         if key in packet_features and packet_features[key] != signature[key]:
             return False
     return True
 
-def log_intrusion(packet_features, signature):
+def log_intrusion(packet_features, signature): #logs intrusion and displays alert in the console
     logging.info(f"Intrusion detected: {packet_features} matched {signature}")
     print(f"Intrusion detected: {packet_features} matched {signature}")
 
-def analyze_packet(packet):
+def analyze_packet(packet):   #analyzes packet features and if they match with signatures
     features = extract_features(packet)
     for signature in signatures:
         if match_signature(features, signature):
@@ -48,6 +48,6 @@ def analyze_packet(packet):
 def packet_handler(packet):
     analyze_packet(packet)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  #initiates packet capturing
     print("Starting signature-based IDS...")
     sniff(prn=packet_handler, store=0)  # 'store=0' to avoid storing packets in memory
